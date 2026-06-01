@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Mobile-first: Prevent zoom on input focus (iOS) */
+  html {
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
+  }
+  
+  body {
+    @apply antialiased;
+  }
+}
+
+@layer components {
+  /* Mobile-First Buttons - Minimum 44px touch target */
+  .btn-primary {
+    @apply bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold px-6 py-3 min-h-[44px] rounded-xl transition-all duration-200 shadow-lg shadow-sky-200 hover:shadow-xl hover:shadow-sky-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-base;
+  }
+  
+  .btn-secondary {
+    @apply bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 font-semibold px-6 py-3 min-h-[44px] rounded-xl border-2 border-slate-200 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-base;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent hover:bg-slate-100 active:bg-slate-200 text-slate-700 font-medium px-4 py-2 min-h-[44px] rounded-xl transition-all duration-200 active:scale-95;
+  }
+  
+  /* Mobile-First Cards */
+  .card {
+    @apply bg-white rounded-2xl shadow-md border border-slate-100 p-4 md:p-6 transition-all duration-300 hover:shadow-lg;
+  }
+  
+  .card-flat {
+    @apply bg-white rounded-xl border border-slate-200 p-3 md:p-4;
+  }
+  
+  /* Mobile-First Inputs - 16px minimum to prevent zoom */
+  .input {
+    @apply w-full px-4 py-3 min-h-[44px] text-base rounded-xl border-2 border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none transition-all duration-200 bg-white text-slate-900 placeholder:text-slate-400;
+  }
+  
+  /* Score Input - Optimized for mobile numeric keyboard */
+  .score-input {
+    @apply w-16 h-16 md:w-14 md:h-14 text-2xl md:text-xl font-bold text-center rounded-xl border-2 border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none transition-all bg-white text-slate-900;
+  }
+  
+  .badge {
+    @apply inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold;
+  }
+  
+  .badge-success {
+    @apply badge bg-emerald-50 text-emerald-700 border border-emerald-200;
+  }
+  
+  .badge-info {
+    @apply badge bg-blue-50 text-blue-700 border border-blue-200;
+  }
+  
+  .badge-warning {
+    @apply badge bg-amber-50 text-amber-700 border border-amber-200;
+  }
+  
+  .badge-danger {
+    @apply badge bg-red-50 text-red-700 border border-red-200;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-sky-600 to-purple-600 bg-clip-text text-transparent font-bold;
+  }
+  
+  .stat-card {
+    @apply bg-gradient-to-br from-white to-slate-50 rounded-xl p-4 md:p-5 border border-slate-200 shadow-sm;
+  }
+}
+
+@layer utilities {
+  /* Safe area support for mobile devices with notches */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
