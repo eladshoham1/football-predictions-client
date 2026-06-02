@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { getTeamDisplayName } from '../utils/teamUtils'
 
 interface Team {
   id: string
   name: string
+  hebrewName?: string | null
   code: string
   flagUrl: string | null
 }
@@ -174,7 +176,7 @@ export default function TeamRankingCard({
 
               {/* Team Name */}
               <div className="flex-1 min-w-0">
-                <div className="font-bold text-slate-800 truncate">{team.name}</div>
+                <div className="font-bold text-slate-800 truncate">{getTeamDisplayName(team)}</div>
                 <div className="text-xs text-slate-500">{team.code}</div>
               </div>
 

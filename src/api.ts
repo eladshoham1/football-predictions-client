@@ -38,13 +38,18 @@ export const fetchLeaderboard = async () => {
 }
 
 // Match Predictions
-export const upsertMatchPrediction = async (body: { matchId: string; homeScore: number; awayScore: number }) => {
+export const upsertMatchPrediction = async (body: { matchId: string; homeScore: number; awayScore: number; firstGoalScorerId?: string }) => {
 	const r = await API.post('/predictions/match', body)
 	return r.data
 }
 
 export const getMyMatchPredictions = async () => {
 	const r = await API.get('/predictions/match')
+	return r.data
+}
+
+export const getMatchPredictions = async (matchId: string) => {
+	const r = await API.get(`/predictions/match/all?matchId=${matchId}`)
 	return r.data
 }
 

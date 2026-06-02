@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchPlayers, fetchTeams, upsertTournamentPrediction, getMyTournamentPrediction } from '../api'
+import { getTeamDisplayName } from '../utils/teamUtils'
 
 interface Player {
   id: string
@@ -9,6 +10,7 @@ interface Player {
   team: {
     id: string
     name: string
+    hebrewName?: string | null
     code: string
     flagUrl: string | null
   }
@@ -50,15 +52,17 @@ export default function GoldenBoot() {
 
   // Filter players by search query and team
   const filteredPlayers = players?.filter((player: Player) => {
+    if (!player.team) return false
+    const teamDisplayName = getTeamDisplayName(player.team)
     const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         player.team.name.toLowerCase().includes(searchQuery.toLowerCase())
+                         teamDisplayName.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesTeam = selectedTeamFilter === 'ALL' || player.team.code === selectedTeamFilter
     return matchesSearch && matchesTeam
   }) || []
 
   // Group players by team
   const playersByTeam = filteredPlayers.reduce((acc: Record<string, Player[]>, player: Player) => {
-    const teamName = player.team.name
+    const teamName = getTeamDisplayName(player.team)
     if (!acc[teamName]) acc[teamName] = []
     acc[teamName].push(player)
     return acc
@@ -88,7 +92,7 @@ export default function GoldenBoot() {
 
   // Set initial selected player from existing prediction
   React.useEffect(() => {
-    if (myPrediction?.goldenBootPlayer && !selectedPlayer) {
+    if (myPrediction?.goldenBootPlayer && !selectedPlayer && myPrediction.goldenBootPlayer.team) {
       setSelectedPlayer(myPrediction.goldenBootPlayer)
     }
   }, [myPrediction])
@@ -146,7 +150,7 @@ export default function GoldenBoot() {
               <div>
                 <div className="text-sm text-green-700 font-medium">הבחירה שלך למלך השערים</div>
                 <div className="flex items-center gap-3 mt-2">
-                  {selectedPlayer.team.flagUrl && (
+                  {selectedPlayer?.team?.flagUrl && (
                     <img 
                       src={selectedPlayer.team.flagUrl} 
                       alt={selectedPlayer.team.name}
@@ -155,7 +159,7 @@ export default function GoldenBoot() {
                   )}
                   <div>
                     <div className="font-bold text-slate-800 text-lg">{selectedPlayer.name}</div>
-                    <div className="text-sm text-slate-600">{selectedPlayer.team.name} • {selectedPlayer.position}</div>
+                    <div className="text-sm text-slate-600">{selectedPlayer.team ? getTeamDisplayName(selectedPlayer.team) : 'קבוצה לא ידועה'} • {selectedPlayer.position || 'שחקן'}</div>
                   </div>
                 </div>
               </div>
@@ -192,8 +196,8 @@ export default function GoldenBoot() {
             className="px-4 py-3 rounded-lg border-2 border-slate-200 focus:border-primary-500 focus:outline-none"
           >
             <option value="ALL">כל הקבוצות</option>
-            {teams?.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((team: any) => (
-              <option key={team.id} value={team.code}>{team.name}</option>
+            {teams?.sort((a: any, b: any) => getTeamDisplayName(a).localeCompare(getTeamDisplayName(b))).map((team: any) => (
+              <option key={team.id} value={team.code}>{getTeamDisplayName(team)}</option>
             ))}
           </select>
         </div>
@@ -204,7 +208,7 @@ export default function GoldenBoot() {
         {Object.keys(playersByTeam).sort().map((teamName) => (
           <div key={teamName} className="card">
             <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-              {playersByTeam[teamName][0].team.flagUrl && (
+              {playersByTeam[teamName][0]?.team?.flagUrl && (
                 <img 
                   src={playersByTeam[teamName][0].team.flagUrl} 
                   alt={teamName}

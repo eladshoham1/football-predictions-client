@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchTeams, getMyGroupPredictions, getMyBracketPredictions, upsertBracketPredictions, getMyTournamentPrediction } from '../api'
+import { getTeamDisplayName } from '../utils/teamUtils'
 
 interface Team {
   id: string
   name: string
+  hebrewName?: string | null
   flagUrl: string | null
   code?: string
 }

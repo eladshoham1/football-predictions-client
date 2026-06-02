@@ -1,7 +1,21 @@
 export type Team = {
   id: string
   name: string
+  hebrewName?: string | null
   flag?: string | null
+}
+
+export type Player = {
+  id: string
+  name: string
+  position?: string | null
+  team: {
+    id: string
+    name: string
+    hebrewName?: string | null
+    code: string
+    flagUrl: string | null
+  }
 }
 
 export type Match = {
@@ -19,7 +33,26 @@ export type Prediction = {
   userId: string
   homeScorePred: number
   awayScorePred: number
+  firstGoalScorerId?: string | null
   pointsTotal: number
+}
+
+export type UserPrediction = {
+  id: string
+  matchId: string
+  predictedHomeScore: number
+  predictedAwayScore: number
+  firstGoalScorerId?: string | null
+  pointsAwarded: number
+  user: {
+    id: string
+    name: string
+    avatarUrl?: string | null
+  }
+  firstGoalScorer?: {
+    id: string
+    name: string
+  } | null
 }
 
 export type User = {

@@ -2,23 +2,24 @@ import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchTeams, upsertGroupPredictions, getMyGroupPredictions, getGroupLockStatus } from '../api'
 import TeamRankingCard from '../components/TeamRankingCard'
+import { getTeamDisplayName } from '../utils/teamUtils'
 
 const GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
 export default function GroupStage() {
   const queryClient = useQueryClient()
   
-  const { data: teams, isLoading: teamsLoading } = useQuery({
+  const { data: teams, isLoading: teamsLoading, error: teamsError } = useQuery({
     queryKey: ['teams'],
     queryFn: fetchTeams,
   })
 
-  const { data: myPredictions } = useQuery({
+  const { data: myPredictions, error: predictionsError } = useQuery({
     queryKey: ['groupPredictions'],
     queryFn: getMyGroupPredictions,
   })
 
-  const { data: lockStatus } = useQuery({
+  const { data: lockStatus, error: lockStatusError } = useQuery({
     queryKey: ['groupLockStatus'],
     queryFn: getGroupLockStatus,
     refetchInterval: 60000, // Refresh every minute
@@ -151,6 +152,44 @@ export default function GroupStage() {
       </div>
     )
   }
+
+  // Error handling
+  if (teamsError || !teams || teams.length === 0) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <h1 className="text-3xl font-black gradient-text">ניחושי שלב הקבוצות</h1>
+        <div className="card bg-red-50 border-2 border-red-300 text-center py-12">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-xl font-bold text-red-800 mb-2">שגיאה בטעינת הנתונים</h2>
+          {teamsError && (
+            <p className="text-red-700 mb-4">
+              {(teamsError as any).message || 'לא ניתן לטעון את רשימת הקבוצות'}
+            </p>
+          )}
+          {teams?.length === 0 && (
+            <p className="text-red-700 mb-4">
+              לא נמצאו קבוצות במערכת
+            </p>
+          )}
+          <button
+            onClick={() => window.location.reload()}
+            className="btn-primary mt-4"
+          >
+            🔄 טען מחדש
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Log for debugging
+  console.log('GroupStage render:', { 
+    teamsCount: teams?.length, 
+    groups: GROUPS.map(g => ({ 
+      group: g, 
+      teamsCount: getGroupTeams(g).length 
+    }))
+  })
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -379,7 +418,7 @@ function ThirdPlaceSelector({ groupPredictions, teams }: any) {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-slate-800 text-sm truncate">{team.name}</div>
+                  <div className="font-bold text-slate-800 text-sm truncate">{getTeamDisplayName(team)}</div>
                   <div className="text-xs text-slate-500">קבוצה {team.groupName}</div>
                 </div>
                 {isSelected && (
