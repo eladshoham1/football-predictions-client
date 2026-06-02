@@ -7,8 +7,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-e20955ae.js"></script>
-    <link rel="stylesheet" href="/assets/index-ffa77810.css">
+    
+    <!-- GitHub Pages SPA redirect handling -->
+    <script>
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-cecadfc2.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-5fe7b600.js">
+    <link rel="modulepreload" crossorigin href="/assets/query-vendor-b2c62a8e.js">
+    <link rel="stylesheet" href="/assets/index-6a7528e9.css">
   </head>
   <body>
     <div id="root"></div>
