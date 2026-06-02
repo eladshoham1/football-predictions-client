@@ -5,9 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   
-  // Set base path for GitHub Pages
-  // Change 'client' to your actual GitHub repository name
-  base: process.env.GITHUB_PAGES === 'true' ? '/client/' : '/',
+  // Base path for deployment
+  base: '/',
   
   build: {
     outDir: 'dist',
