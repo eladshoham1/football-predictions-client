@@ -49,11 +49,10 @@ npm run dev
 VITE_API_URL=http://localhost:4000
 ```
 
-### Production
+### Production (Vercel)
 
-```env
-VITE_API_URL=https://your-backend.onrender.com
-```
+Add in Vercel Dashboard → Settings → Environment Variables:
+- `VITE_API_URL`: Your backend URL (e.g., `https://your-backend.onrender.com`)
 
 ## 📜 Available Scripts
 
@@ -64,40 +63,130 @@ npm run dev              # Start dev server (port 5173)
 # Production
 npm run build            # Build for production
 npm run preview          # Preview production build
-
-# Linting
-npm run lint             # Run ESLint
 ```
 
-## 🚀 Deployment
+## 🚀 Deployment on Vercel (FREE)
 
-This app is designed to be deployed on **GitHub Pages** (FREE forever!).
+This app deploys automatically on **Vercel** with zero configuration!
 
-### Quick Deploy Steps
+### Deployment Steps
 
-1. **Update Configuration**
-   
-   Edit `vite.config.ts`:
-   ```typescript
-   base: '/your-repo-name/'
-   ```
-
-   Edit `public/404.html`:
-   ```html
-   window.location.href = '/your-repo-name/';
-   ```
-
-2. **Enable GitHub Pages**
-   - Go to repo Settings → Pages
-   - Source: GitHub Actions
-
-3. **Add Secret**
-   - Settings → Secrets → Actions
-   - Add `VITE_API_URL` with your backend URL
-
-4. **Deploy**
+1. **Push to GitHub**
    ```bash
-   git add .
+   git push origin main
+   ```
+
+2. **Import to Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Vercel auto-detects Vite configuration
+
+3. **Add Environment Variable**
+   - In Vercel Dashboard: Settings → Environment Variables
+   - Add `VITE_API_URL` with your backend URL
+   - Redeploy to apply changes
+
+4. **Done!**
+   - Automatic deployments on every push
+   - Preview deployments for PRs
+   - Free SSL certificate
+   - Global CDN
+
+### Vercel Configuration
+
+The `vercel.json` is minimal:
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
+}
+```
+
+Vercel automatically:
+- Detects Vite framework
+- Installs dependencies
+- Builds the project
+- Deploys to CDN
+
+## 🏗️ Tech Stack
+
+- **React 18.2.0**: UI library
+- **TypeScript 5.2.2**: Type safety
+- **Vite 4.5.14**: Build tool and dev server
+- **Tailwind CSS 3.4**: Utility-first CSS
+- **React Query 5**: Server state management
+- **Axios**: HTTP client
+- **React Hook Form + Zod**: Form validation
+- **Firebase Auth**: Google OAuth
+
+## 📦 Project Structure
+
+```
+client/
+├── public/           # Static assets
+├── src/
+│   ├── pages/        # Page components
+│   ├── services/     # API and hooks
+│   ├── api.ts        # API client
+│   ├── App.tsx       # Main app component
+│   ├── AuthContext.tsx  # Auth state management
+│   ├── firebase.ts   # Firebase configuration
+│   ├── types.ts      # TypeScript definitions
+│   └── main.tsx      # Entry point
+├── .npmrc            # npm configuration (public registry)
+├── vercel.json       # Vercel deployment config
+└── vite.config.ts    # Vite configuration
+
+## 🔑 Firebase Setup
+
+1. Create Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+2. Enable Google Authentication
+3. Add authorized domains:
+   - `localhost`
+   - Your Vercel domain (e.g., `your-app.vercel.app`)
+4. Copy Firebase config to `src/firebase.ts`
+
+## 📊 API Integration
+
+The frontend expects these endpoints from the backend:
+
+- `GET /matches` - List all matches
+- `GET /predictions` - User's predictions
+- `POST /predictions` - Create/update prediction
+- `GET /leaderboard` - Rankings
+- `POST /auth/google` - Google OAuth login
+
+See [server repo](https://github.com/eladshoham1/football-predictions-server) for backend setup.
+
+## 🐛 Troubleshooting
+
+### Build Issues on Vercel
+
+If you see esbuild or registry errors:
+1. Delete `package-lock.json` and `node_modules`
+2. Ensure `.npmrc` points to public npm registry
+3. Run `npm install` to regenerate lock file
+4. Push changes
+
+### CORS Errors
+
+Make sure backend CORS is configured for your Vercel domain:
+```typescript
+// backend/src/main.ts
+app.enableCors({
+  origin: ['https://your-app.vercel.app'],
+  credentials: true,
+});
+```
+
+## 📄 License
+
+MIT License - feel free to use for your own predictions platform!
+
+---
+
+Made with ⚽ for World Cup 2026
+```
    git commit -m "Ready for deployment"
    git push origin main
    ```
